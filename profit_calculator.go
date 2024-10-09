@@ -1,35 +1,44 @@
 package main
 
-// import "fmt"
+import "fmt"
 
-// func main() {
-// 	var revenue float64
-// 	var expenses float64
-// 	var taxRate float64
+func main() {
 
-// 	// fmt.Print("Enter your revenue: ")
-// 	outputText("Enter your revenue: ", "second string")
-// 	fmt.Scan(&revenue)
+	revenue, expenses, taxRate := getInputs()
+	var ebt, eat, earningRatio = calculateValues(revenue, expenses, taxRate)
 
-// 	fmt.Print("Enter your expenses: ")
-// 	fmt.Scan(&expenses)
+	fmt.Println("Your earning before task is: ", ebt)
+	fmt.Println("Your earning after task is: ", eat)
+	fmt.Println("Your earning ratio is: ", earningRatio)
+}
 
-// 	fmt.Print("Enter your tax rate: ")
-// 	fmt.Scan(&taxRate)
+func calculateValues(revenue, expenses, taxRate float64) (ebt, eat, earningRatio float64) {
+	ebt = revenue - expenses
+	eat = (ebt) - (taxRate / 100 * ebt)
+	earningRatio = ebt / eat
+	return ebt, eat, earningRatio
+}
 
-// 	earningsBeforeTask := revenue - expenses
-// 	earningsAfterTask := calculateEAT(earningsBeforeTask, taxRate)
-// 	earningRatio := earningsBeforeTask / earningsAfterTask
+func getInputs() (float64, float64, float64) {
+	var revenue, expenses, taxRate float64
 
-// 	fmt.Println("Your earning before task is: ", earningsBeforeTask)
-// 	fmt.Println("Your earning after task is: ", earningsAfterTask)
-// 	fmt.Println("Your earning ratio is: ", earningRatio)
-// }
+	fmt.Print("Enter Revenue: $")
+	if _, err := fmt.Scan(&revenue); err != nil || revenue <= 0 {
+		fmt.Println("Invalid input. Please enter a positive number.")
+		return getInputs()
+	}
 
-// func outputText(text1 string, text2 string) {
-// 	fmt.Print(text1)
-// }
+	fmt.Print("Enter expenses: ")
+	if _, err := fmt.Scan(&expenses); err != nil || expenses < 0 {
+		fmt.Println("Invalid input. Please enter a non-negative number.")
+		return getInputs()
+	}
 
-// func calculateEAT(earningsBeforeTask, taxRate float64)  {
-// 	return (earningsBeforeTask) - (taxRate / 100 * earningsBeforeTask)
-// }
+	fmt.Print("Enter tax rate: ")
+	if _, err := fmt.Scan(&taxRate); err != nil || taxRate <= 0 {
+		fmt.Println("Invalid input. Please enter a positive number.")
+		return getInputs()
+	}
+
+	return revenue, expenses, taxRate
+}
