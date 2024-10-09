@@ -1,27 +1,50 @@
 package main
 
-// import (
-// 	"fmt"
-// 	"math"
-// )
+import (
+	"fmt"
+	"math"
+)
 
-// func main() {
-// 	const inflationRate = 2.5
-// 	var investmentAmount float64
-// 	var ratePerYear float64
-// 	var years float64
+const inflationRate = 2.5
 
-// 	fmt.Print("Enter investment amount: ")
-// 	fmt.Scan(&investmentAmount)
+func main() {
+	investmentAmount, ratePerYear, years := getInputs()
+	futureValue, inflationAdjustedValue := calculateValues(inflationRate, investmentAmount, ratePerYear, years)
 
-// 	fmt.Print("Enter rate per year: ")
-// 	fmt.Scan(&ratePerYear)
+	fmt.Printf("Future Value: $%.2f\n", futureValue)
+	fmt.Printf("Inflation Adjusted Value: $%.2f\n", inflationAdjustedValue)
+}
 
-// 	fmt.Print("Enter number of years: ")
-// 	fmt.Scan(&years)
+func getInputs() (float64, float64, float64) {
+	var investmentAmount, ratePerYear, years float64
 
-// 	totalReturn := investmentAmount * math.Pow(1+ratePerYear/100, years)
-// 	futureRealValue := totalReturn / math.Pow(1+inflationRate/100, years)
-// 	fmt.Println("Total return value is: ", totalReturn)
-// 	fmt.Println("Total return value after inflation is: ", futureRealValue)
-// }
+	fmt.Print("Enter investment amount: $")
+	if _, err := fmt.Scan(&investmentAmount); err != nil || investmentAmount <= 0 {
+		fmt.Println("Invalid input. Please enter a positive number.")
+		return getInputs()
+	}
+
+	fmt.Print("Enter annual interest rate (%): ")
+	if _, err := fmt.Scan(&ratePerYear); err != nil || ratePerYear < 0 {
+		fmt.Println("Invalid input. Please enter a non-negative number.")
+		return getInputs()
+	}
+
+	fmt.Print("Enter number of years: ")
+	if _, err := fmt.Scan(&years); err != nil || years <= 0 {
+		fmt.Println("Invalid input. Please enter a positive number.")
+		return getInputs()
+	}
+
+	return investmentAmount, ratePerYear, years
+}
+
+func calculateValues(inflationRate, investmentAmount, ratePerYear, years float64) (futureValue, inflationAdjustedValue float64) {
+	// Calculate future value
+	futureValue = investmentAmount * math.Pow(1+ratePerYear/100, years)
+
+	// Calculate inflation-adjusted value
+	inflationAdjustedValue = futureValue / math.Pow(1+inflationRate/100, years)
+
+	return futureValue, inflationAdjustedValue
+}
